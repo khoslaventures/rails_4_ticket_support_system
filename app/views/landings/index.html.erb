@@ -1,2 +1,15 @@
-<h1>Landings#index</h1>
-<p>Find me in app/views/landings/index.html.erb</p>
+<% if current_admin %>
+<h1>Welcome admin!</h1>
+<p>Please go to the <%= link_to 'support centre', admin_support_centre_path %>!</p>
+<% end %>
+
+<% if current_admin %>
+<% else %>
+  <% if current_user %>
+  <h2><%= link_to 'Go to Tickets!', tickets_path %></h2>
+  <% else %>
+    <h1>Please Sign-up/Login</h1>
+    <p>For checking the Ticket System please <%= link_to 'signup', new_user_registration_path %>.</p>
+    <p>Keep in mind that for checking the Admin's site you should <%= link_to 'signup', new_admin_registration_path  %> for an admin's account.</p>
+  <% end %>
+<% end %>

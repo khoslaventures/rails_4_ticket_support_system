@@ -1,0 +1,72 @@
+<% sumopentickets = 0 %>
+<% sumclosedtickets = 0 %>
+<% @tickets.each do |ticket| %>
+  <% if ticket.status == "open" %>
+    <% sumopentickets = sumopentickets + 1 %>
+  <% elsif ticket.status == "closed" %>
+    <% sumclosedtickets = sumclosedtickets + 1 %>
+  <% end %>
+<% end %>
+
+<h1>Listing tickets</h1>
+<% if sumopentickets == 0 %>
+  <h3>Open Tickets</h3>
+  <h4>No open tickets.</h3><br>
+<% else %>
+ <h3>Open Tickets</h3>
+<table class="table">
+  <tr>
+    <th>Ticket Number</th>
+    <th>Title</th>
+    <th>Submitted by</th>
+    <th>Created at</th>
+    <th colspan="2">Status</th>
+  </tr>
+
+  <% @tickets.each do |ticket| %>
+    <% if ticket.status == "open" %>
+      <% user = User.find(ticket.user_id) %>
+       <tr>
+         <td><%= ticket.id %></td>
+         <td><%= link_to ticket.title, ticket_path(ticket.url_token) %></td>
+         <td><%= user.username %></td>
+         <td><%= ticket.created_at.strftime("%H:%M, %B %d, %Y") %></td>
+         <% if ticket.ticketmessages.last && ticket.ticketmessages.last.user_id %>
+            <td>(user waiting for reply...)</td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+</table><br>
+<% end %>
+
+<% if sumclosedtickets == 0 %>
+  <h3>Closed Tickets</h3>
+  <h4>No closed tickets.</h3><br>
+<% else %>
+<h3>Closed Tickets</h3>
+<table class="table">
+  <tr>
+    <th>Ticket Number</th>
+    <th>Title</th>
+    <th>Submitted by</th>
+    <th>Created at</th>
+    <th colspan="2">Status</th>
+  </tr>
+
+  <% @tickets.each do |ticket| %>
+  <% if ticket.status == "closed" %>
+    <% user = User.find(ticket.user_id) %>
+    <tr>
+      <td><%= ticket.id %></td>
+      <td><%= link_to ticket.title, ticket_path(ticket.url_token) %></td>
+      <td><%= user.username %></td>
+      <td><%= ticket.created_at.strftime("%H:%M, %B %d, %Y") %></td>
+      <% if ticket.ticketmessages.last && ticket.ticketmessages.last.user_id %>
+      <td>(user waiting for reply...)</td>
+      <% end %>
+    </tr>
+  <% end %>
+  <% end %>
+</table>
+<% end %>

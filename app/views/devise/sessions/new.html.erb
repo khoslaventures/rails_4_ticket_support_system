@@ -4,13 +4,21 @@
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "form-horizontal form-user"}) do |f| %>
                                                                                                                                         
-  
+  <% if resource_name != :admin %>
   <div class="form-group">
     <%= f.label :login, "Username or Email", class: "control-label col-md-4" %>
     <div class="col-md-8">
       <%= f.text_field :login, class: "text-field form-control", html: {spellcheck: "false"} %>
     </div>
   </div>
+  <% else %>
+  <div class="form-group">
+    <%= f.label :login, "Email", class: "control-label col-md-4" %>
+    <div class="col-md-8">
+      <%= f.text_field :email, class: "text-field form-control", html: {spellcheck: "false"} %>
+    </div>
+  </div>
+  <% end %>
   
 
   <div class="form-group">

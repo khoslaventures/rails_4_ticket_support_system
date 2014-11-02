@@ -1,0 +1,60 @@
+<% if current_user %>
+
+  <div class="panel panel-blue">
+    <div class="panel-heading">
+      <i class="fa fa-picture-o fa-plus fa-fw pull-left"></i> <h3>Open New Ticket</h3>
+    </div>
+    <div class="panel-body">
+
+      <%= simple_form_for(@ticket, html: {class: 'form-horizontal' }) do |f| %>
+
+        <% if @ticket.errors.any? %>
+          <div class="alert-red alert-dismissible" role="alert">
+            <div class="alert-top container">
+              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <strong><%= pluralize(@ticket.errors.count, "error") %> prohibited this ticket from being saved:</strong>
+              <ul>
+              <% @ticket.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-group form-group-lg row">
+          <%= f.label :title, "Subject", class: "col-sm-3 control-label" %>
+          <div class="col-sm-5">
+            <%= f.text_field :title, class: "input-lg form-control" %>
+          </div>
+        </div>
+
+        <%= f.hidden_field :user_id, :value => current_user.id %>
+        <%= f.hidden_field :status, :value => 'open' %>
+
+        <%= f.fields_for :ticketmessages, @ticket.ticketmessages do |tf| %>
+          <div class="form-group form-group-lg row">
+            <%= f.label :message, "Message", class: "col-sm-3 control-label" %>
+            <div class="col-sm-5">
+              <%= tf.text_area :message, class: "input-lg form-control" %>
+            </div>
+          </div>
+          <%= tf.hidden_field :user_id, :value => current_user.id if current_user %>
+          <%= tf.hidden_field :admin_id, :value => current_admin.id if current_admin %>
+        <% end %>
+
+        <div class="row">
+          <div class="col-sm-offset-3 col-sm-9">
+            <%= f.submit "Open Ticket", class: "btn btn-green btn-lg" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+<% else %>
+  <script type="text/javascript">
+    window.location.href="/login"
+  </script>
+  <p class="alert">Page not found (404)</p>
+<% end %>

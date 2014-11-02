@@ -1,0 +1,106 @@
+<div id="content" class="user-admin">
+  <div class="minitron">
+    <div class="container">
+      <div class="miniadmin">
+        <div class="row">
+          <div class="col-md-9 col-sm-8">
+            <i class="fa fa-grey fa-support fa-2x pull-left"></i>
+            <h1>Support</h1>
+            <p class="admin-lead">Open a support ticket and view past tickets.</p>
+          </div>
+          <div class="col-md-3 col-sm-4">
+            <button type="button" class="btn btn-green btn-lg pull-right" data-toggle="collapse" data-target="#demo" id="newtick">Open New Ticket</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page">
+
+      <div id="demo" class="collapse out">
+        <%= render "tickets/new" %>
+      </div>
+
+      <% sumopentickets = 0 %>
+      <% sumclosetickets = 0 %>
+      <%  @tickets = current_user.tickets.order('status DESC', 'created_at DESC') if current_user %>
+      <% @tickets.each do |ticket| %>
+        <% if ticket.status == "open" %>
+          <% sumopentickets = sumopentickets + 1 %>
+        <% elsif ticket.status == "closed" %>
+          <% sumclosetickets = sumclosetickets + 1 %>
+        <% end %>
+      <% end %>
+
+      <div class="panel panel-blue">
+        <div class="panel-heading">
+          <h3>Open Tickets</h3>
+        </div>
+        <% if sumopentickets == 0 %>
+          <div class="panel-body">
+            Currently, you have no open tickets.
+          </div>
+        <% else %>
+
+          <table class="table">
+            <tr>
+              <th>Subject</th>
+              <th>Created</th>
+              <th colspan="2"></th>
+            </tr>
+
+            <% @tickets.each do |ticket| %>
+              <% if ticket.status == "open" %>
+              <tr>
+                <td><%= link_to ticket.title, ticket_path(ticket.url_token) %></td>
+                <td><%= ticket.created_at.strftime("%H:%M, %B %d, %Y") %></td>
+                <% if ticket.ticketmessages.last && ticket.ticketmessages.last.user_id %>
+                  <td><span class="label label-blue">Pending</span></td>
+                <% else %>
+                  <td><span class="label label-red">Replied</span></td>
+                <% end %>
+              </tr>
+              <% end %>
+            <% end %>
+          </table>
+
+        <% end %>
+      </div>
+
+
+      <div class="panel panel-blue">
+        <div class="panel-heading">
+          <h3>Closed Tickets</h3>
+        </div>
+        <% if sumclosetickets == 0 %>
+          <div class="panel-body">
+            Currently, you have no closed tickets.
+          </div>
+        <% else %>
+          <table class="table">
+            <tr>
+              <th>Ticket Number</th>
+              <th>Subject</th>
+              <th>Created</th>
+              <th colspan="2"></th>
+            </tr>
+
+            <% @tickets.each do |ticket| %>
+              <% if ticket.status == "closed" %>
+              <tr>
+                <td><%= ticket.id %></td>
+                <td><%= link_to ticket.title, ticket_path(ticket.url_token) %></td>
+                <td><%= ticket.created_at.strftime("%H:%M, %B %d, %Y") %></td>
+                <td><span class="label label-red">Closed</span></td>
+              <% end %>
+              </tr>
+            <% end %>
+          </table>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>

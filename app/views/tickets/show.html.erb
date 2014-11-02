@@ -1,0 +1,106 @@
+<% if current_user || current_admin %>
+
+<div id="content" class="user-admin">
+  <div class="minitron">
+    <div class="container">
+      <div class="miniadmin">
+        <div class="row">
+          <div class="col-sm-6">
+            <i class="fa fa-grey fa-ticket fa-2x pull-left"></i>
+            <h1>Ticket</h1>
+            <p class="admin-lead">View, reply to, or close your support ticket.</p>
+          </div>
+          <div class="col-sm-6">
+            <ul class="list-inline pull-right">
+              <% if current_admin %>
+                <%= link_to 'Back to Support', admin_support_centre_path, class: "btn btn-lg btn-blue" %></li>
+              <% else %>
+                <li><%= link_to 'Back to Support', tickets_path, class: "btn btn-lg btn-blue" %></li>
+              <% end %>
+
+              <% if @ticket.status == 'open' %>
+                <li><%= link_to "Close Ticket", {controller: "tickets", action: "close_ticket", id: @ticket.id}, class: "btn btn-red btn-lg" %></li>
+
+              <% else %>
+              <li>Ticket is closed!</li>
+                <% if current_admin %>
+                <li><%= link_to "Open Ticket", {controller: "tickets", action: "open_ticket", id: @ticket.id}, class: "btn btn-green btn-lg" %></li>
+                <% end %>
+              <% end %>
+            </ul>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page">
+
+
+      <div class="panel panel-blue">
+        <div class="panel-heading">
+          <h3>Subject: <%= @ticket.title %></h3>
+        </div>
+        <ul class="list-group">
+          <% @messages.each do |messages| %>
+            <% if messages.message && (messages.user_id || messages.admin_id) %>
+
+              <li class="list-group-item support-item">
+                <% if messages.user_id %>
+                  <% user = User.find(messages.user_id) %>
+                  <p><%= image_tag support_avatar_url(user), class: "avatar pull-left" %></p>
+                <% end %>
+
+                <% if messages.admin_id %>
+                  <% admin = Admin.find(messages.admin_id)  %>
+                  <p><%= image_tag support_avatar_url(admin), class: "avatar pull-left" %></p>
+                <% end %>
+
+                <% if messages.user_id %>
+                  <% if current_admin %>
+                    <h3><%= user.username %></h3> 
+                  <% else %>
+                    <h3><%= user.username %></h3>
+                  <% end %>
+                <% else messages.admin_id %>
+                    <h3><%= Admin %></h3>
+                <% end %>
+
+                <p><%= messages.created_at.strftime("Submitted at %H:%M, %B %d, %Y") %></p>
+
+                <p><%= messages.message.html_safe %></p>
+
+              </li>
+
+            <% end %>
+          <% end %>
+
+          <li class="list-group-item">
+            <% if @ticket.status == 'open' || current_admin %>
+
+              <%= form_for([@ticket, @ticket.ticketmessages.build]) do |f| %>
+                <%= f.hidden_field :user_id, :value => current_user.id if current_user %>
+                <%= f.hidden_field :admin_id, :value => current_admin.id if current_admin %>
+
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="form-group">
+                        <h3>Reply</h3>
+                        <%= f.label :message, class: "sr-only" %>
+                        <%= f.text_area :message, class: "input-lg form-control" %>
+                      </div>
+                    </div>
+                  </div>
+
+                  <%= f.submit "Submit Reply", class: "btn btn-lg btn-green" %>
+
+              <% end %>
+            <% end %>
+          </li>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
