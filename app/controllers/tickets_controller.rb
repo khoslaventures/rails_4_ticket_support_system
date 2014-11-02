@@ -3,9 +3,13 @@ class TicketsController < ApplicationController
   before_filter :authenticate_admin!, only: [:destroy]
 
   def index
-    @tickets = current_user.tickets.order('status DESC', 'created_at DESC')
-    @ticket = Ticket.new
-    @ticket.ticketmessages.build
+    if current_admin
+    redirect_to root_path
+    else
+      @tickets = current_user.tickets.order('status DESC', 'created_at DESC')
+      @ticket = Ticket.new
+      @ticket.ticketmessages.build
+    end
   end
 
   def new
