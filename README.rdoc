@@ -1,28 +1,15 @@
-== README
+Rails 4 Ticket Support System
+http://stefanosioannou.com
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Instructions
 
-Things you may want to cover:
+* git clone https://github.com/stefioan/rails_4_ticket_support_system.git
 
-* Ruby version
+* bundle install
 
-* System dependencies
+* rake db:migrate
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Ready to use, launch the rails server locally to test.
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+Feel free to improve and report issues/bugs!
