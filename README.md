@@ -19,4 +19,22 @@ Feel free to improve and report issues/bugs!
 
 2. The email notifications are disabled. The current implementation was using Action Mailer (UserMailer). Please setup your desired structure.
 
+### Features
+
+* Uses SQLite3 for quick setup.
+* Integrated with Devise, can easily be integrated with any other authentication system.
+* Shows user's gravatar.
+* Sends an email notification  to the user and admin when a ticket reply takes place.
+* Proper styled email notification templates! (Created by [Nicholas Tart](http://nicholastart.com/))
+* Ability top open/close tickets.
+* Validation of not sending empty messages or tickets.
+* Ordering tickets by status (open, close) and updated at.
+* Basic layout with Twitter Bootstrap v3.
+
+### Basic Security
+* Basic before_filter security for controllers.
+* All tickets have unique encrypted tokens and are safe from unauthorised access.
+
+
+
 http://stefanosioannou.com
